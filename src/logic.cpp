@@ -69,11 +69,9 @@ void addTask(json& tasks) {
 
 
 void viewTasks(const json& tasks) {
-    
     cout << "Your tasks are: \n";
     for (const auto& task : tasks){
         cout << "* " << task["title"] << " | " << task["description"] << " | " << task["due_date"] << " | " << task["status"] << "\n";
-    
     }
     
 }
@@ -86,6 +84,7 @@ void clearTasks(json& tasks) {
     cout << "All tasks cleared!\n";
 
 }
+
 
 void updateTasks(json& tasks){
     
@@ -124,7 +123,7 @@ void updateTasks(json& tasks){
             string newName;
             getline(cin, newName);
             task[key] = newName;
-            cout << "Task " << name << " was updated to " << newName << "\n";
+            cout << "Task " << key << " was updated to " << newName << "\n";
             break;
         }
     }
@@ -142,8 +141,7 @@ int main()
     cout<<"2. List tasks\n";
     cout<<"3. Update a task\n";
     cout<<"4. Clear tasks\n";
-    cout<<"5. Delete task\n";
-    cout<<"6. Quit :(\n\n";
+    cout<<"5. Quit :(\n\n";
 
     while (true) {
         cout<<"Pick ONE! (1-5):\n";
@@ -163,7 +161,8 @@ int main()
     else if (choice == 4) {
         clearTasks(tasks);
     }
-    else if (choice == 6) {
+    
+    else if (choice == 5) {
         cout << "ok, bye...\n";
         return 0;
     }

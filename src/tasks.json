@@ -1,17 +1,14 @@
 [
     {
-        "description": "exciting hackathon in berlin",
-        "due_date": "2026-07-24",
-        "title": "definetly go to horizons"
+        "description": "food",
+        "due_date": "2020-01-01",
+        "status": "Incomplete",
+        "title": "eat dinner"
     },
     {
-        "description": "difficult task for an upcoming engineering major",
-        "due_date": "2026-07-17",
-        "title": "touch grass"
-    },
-    {
-        "description": "will eat salmon. very healthy",
-        "due_date": "3000-10-10",
-        "title": "eat lunch"
+        "description": "dad asked me to",
+        "due_date": "2020-01-02",
+        "status": "done",
+        "title": "do the laundry"
     }
 ]
