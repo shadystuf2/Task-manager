@@ -69,9 +69,13 @@ void addTask(json& tasks) {
 
 
 void viewTasks(const json& tasks) {
-    cout << "Your tasks are: \n";
+    cout << "Your tasks are: \n\n";
     for (const auto& task : tasks){
-        cout << "* " << task["title"] << " | " << task["description"] << " | " << task["due_date"] << " | " << task["status"] << "\n";
+        cout << "-----------------------\n";
+        cout << "Title: " << task["title"] << "\n";
+        cout << "Description: " << task["description"] << "\n";
+        cout << "Due date: " << task["due_date"] << "\n";
+        cout << "Status: " << task["status"] << "\n\n";
     }
     
 }
@@ -119,57 +123,73 @@ void updateTasks(json& tasks){
 
     for (auto& task : tasks) {
         if (task["title"] == name) {
-            cout << "Enter the new " << key << " for the task: \n";
+            cout << "\nEnter the new " << key << " for the task: \n";
             string newName;
             getline(cin, newName);
             task[key] = newName;
-            cout << "Task " << key << " was updated to " << newName << "\n";
+            cout << "\nTask " << key << " was updated to " << newName << "\n";
             break;
         }
     }
     saveTasks(tasks);
 }
 
+void menu(){
+    cout<<"  ----------------------\n";
+    cout<<" |      TASK MANAGER     |\n";  
+    cout<<"  ----------------------\n";
+    
+    cout<<"     1. Add a task\n";
+    cout<<"     2. List tasks\n";
+    cout<<"     3. Update a task\n";
+    cout<<"     4. Clear tasks\n";
+    cout<<"     5. Quit :(\n\n";
+    cout<<"==========================\n";
+}
+
+void seperator() {
+    cout<<"\n========================\n";
+}
 
 // MAINNNNN
 int main() 
 {
     json tasks = loadTasks();
     
-    cout<<"TASK MANAGER\n\n";
-    cout<<"1. Add a task\n";
-    cout<<"2. List tasks\n";
-    cout<<"3. Update a task\n";
-    cout<<"4. Clear tasks\n";
-    cout<<"5. Quit :(\n\n";
+    menu();
 
     while (true) {
-        cout<<"Pick ONE! (1-5):\n";
+        cout<<"Pick ONE! (1-5) :";
         int choice{};
         cin>> choice;
         cout<<"\n";
         cin.ignore();
-        if (choice == 1) {
-        addTask(tasks);
-    }
-    else if (choice == 2) {
-        viewTasks(tasks);
-    }
-    else if (choice == 3) {
-        updateTasks(tasks);
-    }
-    else if (choice == 4) {
-        clearTasks(tasks);
-    }
     
-    else if (choice == 5) {
-        cout << "ok, bye...\n";
-        return 0;
-    }
-    else {
-        cout<<"Invalid choice, bye\n";
-        return 0;
-    }
+        if (choice == 1) {
+            addTask(tasks);
+            seperator();
+        }
+        else if (choice == 2) {
+            viewTasks(tasks);
+            seperator();
+        }
+        else if (choice == 3) {
+            updateTasks(tasks);
+            seperator();
+        }
+        else if (choice == 4) {
+            clearTasks(tasks);
+            seperator();
+        }
+        
+        else if (choice == 5) {
+            cout << "ok, bye...\n";
+            return 0;
+        }
+        else {
+            cout<<"Invalid choice, bye\n";
+            return 0;
+        }
 
     }
 }
