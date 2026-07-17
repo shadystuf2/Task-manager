@@ -36,8 +36,9 @@ void saveTasks(const json& tasks) {
 
 // LOGIC FUNCTIONS
 void addTask(json& tasks) {
-    int input_task;
-    cin>>input_task;
+    cout << "Enter task title: \n";
+    string input_task;
+    getline(cin, input_task);
 
     tasks.push_back(input_task); // .push_back adds element to end of json file
     saveTasks(tasks);
@@ -92,6 +93,7 @@ int main()
     cout<<"Pick ONE! (1-5):\n";
     int choice{};
     cin>> choice;
+    cin.ignore();
     
     if (choice == 1) {
         addTask(tasks);
