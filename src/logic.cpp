@@ -5,16 +5,16 @@
 using namespace std;
 using json = nlohmann::json;
 
-const std::string TASKS = "tasks.json";
+const string TASKS = "tasks.json";
 
 
 // FILE FUNCTIONS
 json loadTasks(){
-    std::ifstream file(TASKS);
+    ifstream file(TASKS);
     
     if (!file.is_open()){
         cout << "No tasks file found, so I created a new one!\n";
-        std::ofstream newFile(TASKS);
+        ofstream newFile(TASKS);
         newFile << "[]";
         newFile.close();
         return json::array();
@@ -28,7 +28,7 @@ json loadTasks(){
 }
 
 void saveTasks(const json& tasks) {
-    std::ofstream file(TASKS);
+    ofstream file(TASKS);
     file << tasks.dump(4); // .dump converts JSON object (compatible with cpp, not json file) to string
     file.close();
 }
@@ -37,31 +37,43 @@ void saveTasks(const json& tasks) {
 // LOGIC FUNCTIONS
 void addTask(json& tasks) {
     int input_task;
-    std::cin>>input_task;
+    cin>>input_task;
 
-    tasks.push_back(input_task);
+    tasks.push_back(input_task); // .push_back adds element to end of json file
     saveTasks(tasks);
     
 }
 
 
-void viewTasks() {
-    
-    ifstream file(TASKS);
-    std::string s;
-
-    getline(file, s);
-    cout << "Your tasks are: " << s;
+void viewTasks(const json& tasks) {
+    cout << "Your tasks are: \n";
+    for (const auto& task : tasks){
+        cout << "* " << task << "\n";
+    }
     
 }
 
-void clearTasks() {
-    std::fstream file(TASKS, std::ios::trunc);
-    file.close();
+void clearTasks(json& tasks) {
+    tasks.clear();
+    saveTasks(tasks);
 }
 
-void updateTasks(){
-    std::cout<<"Hi \n";
+void updateTasks(json& tasks){
+    cout << "Enter the name of the task you want to update: \n";
+    string name;
+    cin >> name;
+
+    for (auto& task : tasks) {
+        if (task == name) {
+            cout << "Enter the new name for the task: \n";
+            string newName;
+            cin >> newName;
+            task = newName;
+            cout << "Task " << name << "was updated to " << newName << "\n";
+            break;
+        }
+    }
+    saveTasks(tasks);
 }
 
 
@@ -70,36 +82,36 @@ int main()
 {
     json tasks = loadTasks();
     
-    std::cout<<"hey, Hey, HEY! WELCOME to the task manager!\n";
-    std::cout<<"1. Add a task\n";
-    std::cout<<"2. List tasks\n";
-    std::cout<<"3. Update a task\n";
-    std::cout<<"4. Clear tasks\n";
-    std::cout<<"5. Quit :(\n";
+    cout<<"hey, Hey, HEY! WELCOME to the task manager!\n";
+    cout<<"1. Add a task\n";
+    cout<<"2. List tasks\n";
+    cout<<"3. Update a task\n";
+    cout<<"4. Clear tasks\n";
+    cout<<"5. Quit :(\n";
 
-    std::cout<<"Pick ONE! (1-5):\n";
+    cout<<"Pick ONE! (1-5):\n";
     int choice{};
-    std::cin>> choice;
+    cin>> choice;
     
     if (choice == 1) {
         addTask(tasks);
     }
     else if (choice == 2) {
-        viewTasks();
+        viewTasks(tasks);
     }
     else if (choice == 3) {
-        updateTasks();
+        updateTasks(tasks);
     }
     else if (choice == 4) {
-        clearTasks();
+        clearTasks(tasks);
     }
     else if (choice == 5) {
-        std::cout << "ok, bye...";
+        cout << "ok, bye...";
         return 0;
     }
     else {
-        std::cout<<"Invalid choice, uh oh... try again\n";
-        std::cin>> choice;
+        cout<<"Invalid choice, uh oh... try again\n";
+        cin>> choice;
     }
 
 }
