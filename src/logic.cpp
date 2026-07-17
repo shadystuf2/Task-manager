@@ -40,7 +40,7 @@ void saveTasks(const json& tasks) {
 
 // LOGIC FUNCTIONS
 void addTask(json& tasks) {
-    string title, description, due_date;
+    string title, description, due_date, status;
 
     cout << "Enter task title: \n";
     getline(cin, title);
@@ -50,9 +50,12 @@ void addTask(json& tasks) {
 
     cout << "Enter task due date (YYYY-MM-DD): \n";
     getline(cin, due_date);
+    
+    status = "Incomplete";
 
 
     json task = {
+        {"status", status},
         {"due_date", due_date},
         {"description", description}, 
         {"title", title}
@@ -69,7 +72,7 @@ void viewTasks(const json& tasks) {
     
     cout << "Your tasks are: \n";
     for (const auto& task : tasks){
-        cout << "* " << task["title"] << " | " << task["description"] << " | " << task["due_date"] << "\n";
+        cout << "* " << task["title"] << " | " << task["description"] << " | " << task["due_date"] << " | " << task["status"] << "\n";
     
     }
     
@@ -85,16 +88,42 @@ void clearTasks(json& tasks) {
 }
 
 void updateTasks(json& tasks){
+    
+    cout << "What do you want to update?\n\n";
+    cout << "1. Update task title\n";
+    cout << "2. Update task description\n";
+    cout << "3. Update task due date\n";
+    cout << "4. Update task status\n";
+    string updateChoice, key;
+    getline(cin, updateChoice);
+
+    if (updateChoice == "1"){
+        key = "title";
+    }
+    else if (updateChoice == "2"){
+        key = "description";
+    }
+    else if (updateChoice == "3"){
+        key = "due_date";
+    }
+    else if (updateChoice == "4"){
+        key = "status";
+    }
+    else {
+        cout << "Invalid choice, returning to main menu...\n";
+        return;
+    }
+
     cout << "Enter the title of the task you want to update: \n";
     string name;
     getline(cin, name);
 
     for (auto& task : tasks) {
         if (task["title"] == name) {
-            cout << "Enter the new title for the task: \n";
+            cout << "Enter the new " << key << " for the task: \n";
             string newName;
             getline(cin, newName);
-            task["title"] = newName;
+            task[key] = newName;
             cout << "Task " << name << " was updated to " << newName << "\n";
             break;
         }
@@ -108,12 +137,13 @@ int main()
 {
     json tasks = loadTasks();
     
-    cout<<"hey, Hey, HEY! WELCOME to the task manager!\n\n";
+    cout<<"TASK MANAGER\n\n";
     cout<<"1. Add a task\n";
     cout<<"2. List tasks\n";
-    cout<<"3. Update a task title\n";
+    cout<<"3. Update a task\n";
     cout<<"4. Clear tasks\n";
-    cout<<"5. Quit :(\n\n";
+    cout<<"5. Delete task\n";
+    cout<<"6. Quit :(\n\n";
 
     while (true) {
         cout<<"Pick ONE! (1-5):\n";
@@ -133,8 +163,8 @@ int main()
     else if (choice == 4) {
         clearTasks(tasks);
     }
-    else if (choice == 5) {
-        cout << "ok, bye...";
+    else if (choice == 6) {
+        cout << "ok, bye...\n";
         return 0;
     }
     else {
