@@ -1,0 +1,69 @@
+
+Release · YML
+name: Release
+ 
+# Runs whenever you push a tag like v1.0.0
+on:
+  push:
+    tags:
+      - "v*"
+ 
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: task-manager
+            asset_name: task-manager-linux-x64
+          - os: macos-latest
+            artifact_name: task-manager
+            asset_name: task-manager-macos-x64
+          - os: windows-latest
+            artifact_name: task-manager.exe
+            asset_name: task-manager-windows-x64.exe
+ 
+    runs-on: ${{ matrix.os }}
+ 
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+ 
+      - name: Set up MinGW (Windows only)
+        if: matrix.os == 'windows-latest'
+        uses: egor-tensin/setup-mingw@v2
+ 
+      - name: Build (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} main.cpp
+ 
+      - name: Build (Windows)
+        if: matrix.os == 'windows-latest'
+        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} main.cpp
+ 
+      - name: Rename artifact
+        shell: bash
+        run: mv ${{ matrix.artifact_name }} ${{ matrix.asset_name }}
+ 
+      - name: Upload artifact for release job
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: ${{ matrix.asset_name }}
+ 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+ 
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
