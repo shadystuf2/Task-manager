@@ -1,11 +1,10 @@
 name: Release
- 
-# Runs whenever you push a tag like v1.0.0
+
 on:
   push:
     tags:
       - "v*"
- 
+
 jobs:
   build:
     strategy:
@@ -20,35 +19,42 @@ jobs:
           - os: windows-latest
             artifact_name: task-manager.exe
             asset_name: task-manager-windows-x64.exe
- 
+
     runs-on: ${{ matrix.os }}
- 
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
- 
+
+
       - name: Set up MinGW (Windows only)
         if: matrix.os == 'windows-latest'
         uses: egor-tensin/setup-mingw@v2
- 
+
+      - name: Fetch nlohmann/json header
+        shell: bash
+        run: |
+          mkdir -p include/nlohmann
+          curl -L -o include/nlohmann/json.hpp https://github.com/nlohmann/json/releases/latest/download/json.hpp
+
       - name: Build (Linux/macOS)
         if: matrix.os != 'windows-latest'
-        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} src/logic.cpp
- 
+        run: g++ -std=c++17 -O2 -Iinclude -o ${{ matrix.artifact_name }} src/logic.cpp
+
       - name: Build (Windows)
         if: matrix.os == 'windows-latest'
-        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} src/logic.cpp
- 
+        run: g++ -std=c++17 -O2 -Iinclude -o ${{ matrix.artifact_name }} src/logic.cpp
+
       - name: Rename artifact
         shell: bash
         run: mv ${{ matrix.artifact_name }} ${{ matrix.asset_name }}
- 
+
       - name: Upload artifact for release job
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
           path: ${{ matrix.asset_name }}
- 
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -57,11 +63,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
- 
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
- 
