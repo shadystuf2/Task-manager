@@ -62,6 +62,18 @@ Double-click `task-manager-windows-x64.exe`, or run it from a terminal:
 .\task-manager-windows-x64.exe
 ```
 
+### Testing
+### Tested platforms
+
+| Platform | Arch | Tested OS version         | Notes |
+|----------|--------------|----------------------------|-------|
+| Linux    | x86_64       | Ubuntu 24.04 | Development environment, thurough testing |
+| macOS    | x86_64       | macos-26-arm64     | Built by cross-compilation, lightly tested |
+| Windows  | x86_64       | windows-2025-vs2026 | Built by cross-compilation, lightly tested |  
+
+### Build process
+
+Binaries are built automatically via [GitHub Actions](.github/workflows/release.yml) whenever a version tag is pushed, cross-compiling for Linux, macOS, and Windows in parallel.
 
 That's all!
 
