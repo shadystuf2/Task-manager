@@ -22,6 +22,12 @@ Task list:
 
 JSON file:  
 <img width="498" height="479" alt="Screenshot 2026-07-17 at 19 43 44" src="https://github.com/user-attachments/assets/c6e7fa5f-c1ea-4081-a034-8870e7f63b9f" />  
+Recording:  
+
+
+https://github.com/user-attachments/assets/0e26f0f9-ff01-47df-8ef0-c7a37218ea7d
+
+
 
 
    
