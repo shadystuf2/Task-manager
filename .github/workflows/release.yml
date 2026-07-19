@@ -1,10 +1,14 @@
 name: Release
-
+ 
+# Runs whenever you push a tag like v1.0.0
 on:
   push:
     tags:
       - "v*"
-
+ 
+permissions:
+  contents: write
+ 
 jobs:
   build:
     strategy:
@@ -19,14 +23,15 @@ jobs:
           - os: windows-latest
             artifact_name: task-manager.exe
             asset_name: task-manager-windows-x64.exe
-
+ 
     runs-on: ${{ matrix.os }}
-
+ 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
-
+ 
+      # Windows runners don't have g++ (MinGW) set up by default,
+      # this step installs it via MSYS2 (more reliable than chocolatey-based actions).
       - name: Set up MSYS2 (Windows only)
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
@@ -34,33 +39,34 @@ jobs:
           msystem: MINGW64
           install: mingw-w64-x86_64-gcc
           update: true
-
-     
+ 
+      # nlohmann/json is header-only, so we just fetch the single header
+      # into a local include folder rather than dealing with per-OS package managers.
       - name: Fetch nlohmann/json header
         shell: bash
         run: |
           mkdir -p include/nlohmann
           curl -L -o include/nlohmann/json.hpp https://github.com/nlohmann/json/releases/latest/download/json.hpp
-
+ 
       - name: Build (Linux/macOS)
         if: matrix.os != 'windows-latest'
         run: g++ -std=c++17 -O2 -Iinclude -o ${{ matrix.artifact_name }} src/logic.cpp
-
+ 
       - name: Build (Windows)
         if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: g++ -std=c++17 -O2 -Iinclude -o ${{ matrix.artifact_name }} src/logic.cpp
-
+ 
       - name: Rename artifact
         shell: bash
         run: mv ${{ matrix.artifact_name }} ${{ matrix.asset_name }}
-
+ 
       - name: Upload artifact for release job
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
           path: ${{ matrix.asset_name }}
-
+ 
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -69,10 +75,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-
+ 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ 
