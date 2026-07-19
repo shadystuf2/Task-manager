@@ -27,10 +27,15 @@ jobs:
         uses: actions/checkout@v4
 
 
-      - name: Set up MinGW (Windows only)
+      - name: Set up MSYS2 (Windows only)
         if: matrix.os == 'windows-latest'
-        uses: egor-tensin/setup-mingw@v2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-gcc
+          update: true
 
+     
       - name: Fetch nlohmann/json header
         shell: bash
         run: |
@@ -43,6 +48,7 @@ jobs:
 
       - name: Build (Windows)
         if: matrix.os == 'windows-latest'
+        shell: msys2 {0}
         run: g++ -std=c++17 -O2 -Iinclude -o ${{ matrix.artifact_name }} src/logic.cpp
 
       - name: Rename artifact
