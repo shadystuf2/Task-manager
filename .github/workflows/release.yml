@@ -33,11 +33,11 @@ jobs:
  
       - name: Build (Linux/macOS)
         if: matrix.os != 'windows-latest'
-        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} main.cpp
+        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} src/logic.cpp
  
       - name: Build (Windows)
         if: matrix.os == 'windows-latest'
-        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} main.cpp
+        run: g++ -std=c++17 -O2 -o ${{ matrix.artifact_name }} src/logic.cpp
  
       - name: Rename artifact
         shell: bash
