@@ -28,23 +28,40 @@ JSON file:
 In the end, I am very proud for learning how to manage files in C++ and also figuring out Codespaces, since up until that point I was only using PyCharm. 
 Note to self: do NOT assume I can learn C++ in a day
 
-**AI:** I used it to explain the error in my code when I was debugging and couldn't figure out what was wrong by myself or couldn't find a clear or working answer in any forums.
+**AI:** I used it to explain the error in my code when I was debugging and couldn't figure out what was wrong by myself or couldn't find a clear or working answer in any forums. Also I used it to help
+upload my project to GitHub Releases.
 
 ### *How to run the program*
-1. Clone the repository  
-Run this in your terminal (Github Codespaces or Linux systems): git clone  
-cd /workspaces/Task-manager/src/
+## Download
 
-3. Install the library (so the C++ code can use the JSON library)  
-Run: sudo apt install nlohmann-json3-dev
-  
-4. Compile  
-Run: g++ logic.cpp -o task-manager
-  
-5. Run!  
-Run: ./task-manager  
+Pre-built binaries are available on the [Releases page](https://github.com/shadystuf2/Task-manager/releases) — no need to compile from source.
 
-Long process cause C++ refuses to cooporate. Don't ask me why I chose this language. :P
+1. Go to [Releases](https://github.com/shadystuf2/Task-manager/releases) and open the latest version.
+2. Download the file matching your operating system:
+   - **Linux:** `task-manager-linux-x64`
+   - **macOS:** `task-manager-macos-x64`
+   - **Windows:** `task-manager-windows-x64.exe`
+
+### Running it
+
+Linux / macOS:
+```bash
+chmod +x task-manager-linux-x64   # or task-manager-macos-x64
+./task-manager-linux-x64
+```
+App may be blocked since it's by an unidentified developer. Either right-click the file → Open, or run:
+```bash
+xattr -d com.apple.quarantine task-manager-macos-x64
+```
+
+
+Windows:  
+
+Double-click `task-manager-windows-x64.exe`, or run it from a terminal:
+```bash
+.\task-manager-windows-x64.exe
+```
+
 
 That's all!
 
